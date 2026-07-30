@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Point this to your local backend server
 const API = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: 'https://vitto-lending-system-81ee.onrender.com',
 });
 
 // 1. Submit Business Profile
