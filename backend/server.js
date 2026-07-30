@@ -22,6 +22,9 @@ const loanRoutes = require('./src/routes/loanRoutes');
 const decisionRoutes = require('./src/routes/decisionRoutes');
 
 // Use Routes
+app.get('/', (req, res) => {
+    res.status(200).json({ status: 'online', message: 'Vitto Lending API is running live!' });
+});
 app.use('/api/business', businessRoutes);
 app.use('/api/loan', loanRoutes);
 app.use('/api/decision', decisionRoutes);
