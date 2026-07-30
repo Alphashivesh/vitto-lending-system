@@ -16,6 +16,7 @@ A full-stack, lightweight lending decision engine designed to simulate how digit
 ```bash
 git clone <your-repo-url>
 cd vitto-lending-system
+```
 
 ### 2. Setup Databases
 
@@ -29,6 +30,7 @@ Create a `.env` file in the `backend/` directory with the following variables:
 PORT=5000
 PG_URI=your_postgresql_connection_string
 MONGO_URI=your_mongodb_connection_string
+```
 
 ### 4. Start the Application
 Open two separate terminals:
@@ -38,12 +40,14 @@ Open two separate terminals:
 cd backend
 npm install
 npm run dev
+```
 
 **Terminal 2 (Frontend):**
 ```bash
 cd frontend
 npm install
 npm run dev
+```
 
 ### 🧠 Decision Engine Logic & Assumptions
 The credit engine utilizes a custom scoring model starting with a base score of 900. If the final score drops below 650, the loan is rejected.
