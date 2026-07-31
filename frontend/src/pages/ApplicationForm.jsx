@@ -53,10 +53,15 @@ const ApplicationForm = () => {
                 business_type: formData.business_type,
                 monthly_revenue: Number(formData.monthly_revenue)
             };
+            // 1. Submit Business
             const businessRes = await submitBusinessProfile(businessPayload);
-
-            // Safely extract business ID with fallbacks
-            const businessId = businessRes.data.id || businessRes.data.business_id || businessRes.data.business?.id;
+            
+            // 🔥 BULLETPROOF ID EXTRACTION 🔥
+            const businessId = businessRes?.data?.id || businessRes?.id;
+            
+            if (!businessId) {
+                throw new Error("Database saved the profile, but frontend couldn't read the ID!");
+            }
 
             const loanPayload = {
                 business_id: businessId,
@@ -65,14 +70,21 @@ const ApplicationForm = () => {
                 purpose: formData.purpose
             };
 
+            // 2. Submit Loan
             const loanRes = await submitLoanApplication(loanPayload);
-            const loanId = loanRes.data.id || loanRes.data.loan_id || loanRes.data.loan?.id;
+            
+            // 🔥 BULLETPROOF ID EXTRACTION 🔥
+            const loanId = loanRes?.data?.id || loanRes?.id;
 
-            // 1. Trigger the background evaluation
+            if (!loanId) {
+                throw new Error("Database saved the loan, but frontend couldn't read the ID!");
+            }
+
+            // 3. Trigger the background evaluation
             setStatus('evaluating');
             await evaluateLoan(loanId); 
 
-            // 2. Poll the backend until the job finishes
+            // 4. Poll the backend until the job finishes
             const finalDecision = await pollStatus(loanId);
 
             // 3. Update the UI with the final result
