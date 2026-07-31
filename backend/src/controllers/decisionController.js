@@ -18,7 +18,7 @@ const evaluateLoanAsync = async(req, res) => {
         // 3. Simulate background engine processing
         setTimeout(async() => {
             try {
-                const score = Math.floor(Math.random() * (900 - 300 + 1)) + 300;
+                const score = 800
                 const status = score >= 600 ? 'Approved' : 'Rejected';
                 const reasons = score < 600 ? ['Low credit score', 'High risk sector'] : ['Good credit history', 'Healthy revenue'];
 
