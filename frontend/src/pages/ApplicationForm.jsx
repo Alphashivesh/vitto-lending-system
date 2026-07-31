@@ -13,7 +13,7 @@ const ApplicationForm = () => {
         purpose: ''
     });
 
-    const [status, setStatus] = useState('idle'); 
+    const [status, setStatus] = useState('idle');
     const [errorMessage, setErrorMessage] = useState('');
     const [decision, setDecision] = useState(null);
 
@@ -27,7 +27,7 @@ const ApplicationForm = () => {
                 try {
                     const res = await checkLoanStatus(loanId);
                     const currentStatus = res.decision.decision_status;
-                    
+
                     // Stop polling if the decision is final
                     if (currentStatus === 'Approved' || currentStatus === 'Rejected') {
                         clearInterval(interval);
@@ -54,22 +54,27 @@ const ApplicationForm = () => {
                 monthly_revenue: Number(formData.monthly_revenue)
             };
             const businessRes = await submitBusinessProfile(businessPayload);
-            
+
+            // Safely extract business ID with fallbacks
+            const businessId = businessRes.data.id || businessRes.data.business_id || businessRes.data.business?.id;
+
             const loanPayload = {
-                business_id: businessRes.data.id,
+                business_id: businessId,
                 requested_amount: Number(formData.requested_amount),
                 tenure_months: Number(formData.tenure_months),
                 purpose: formData.purpose
             };
+
             const loanRes = await submitLoanApplication(loanPayload);
-            
+            const loanId = loanRes.data.id || loanRes.data.loan_id || loanRes.data.loan?.id;
+
             // 1. Trigger the background evaluation
-            setStatus('evaluating'); 
-            await evaluateLoan(loanRes.data.id);
-            
+            setStatus('evaluating');
+            await evaluateLoan(loanId); // <--- Using your new, safe variable!
+
             // 2. Poll the backend until the job finishes
-            const finalDecision = await pollStatus(loanRes.data.id);
-            
+            const finalDecision = await pollStatus(loanId); // <--- Using your new, safe variable!
+
             // 3. Update the UI with the final result
             setDecision({
                 status: finalDecision.decision_status,
@@ -97,7 +102,7 @@ const ApplicationForm = () => {
         <div className="card">
             <form onSubmit={handleSubmit}>
                 <h3 className="section-title">Business Profile</h3>
-                
+
                 <div className="form-group">
                     <label>Owner Name</label>
                     <input type="text" className="input-field" name="owner_name" required value={formData.owner_name} onChange={handleChange} placeholder="Enter full name" />
@@ -146,11 +151,11 @@ const ApplicationForm = () => {
                 )}
 
                 <button type="submit" className="btn-primary" disabled={status === 'loading' || status === 'evaluating'}>
-        {status === 'loading' && 'Submitting Data...'}
-        {status === 'evaluating' && 'Simulating Background Check (Please Wait)...'}
-        {status === 'idle' && status !== 'error' && 'Submit Application'}
-        {status === 'error' && 'Try Again'}
-    </button>
+                    {status === 'loading' && 'Submitting Data...'}
+                    {status === 'evaluating' && 'Simulating Background Check (Please Wait)...'}
+                    {status === 'idle' && status !== 'error' && 'Submit Application'}
+                    {status === 'error' && 'Try Again'}
+                </button>
             </form>
         </div>
     );
