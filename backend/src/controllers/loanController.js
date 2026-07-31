@@ -22,10 +22,11 @@ const applyLoan = async(req, res) => {
         const newLoan = result.rows[0];
 
         // Silent audit log to MongoDB
+        // FIXED: Using "request_payload" to match the MongoDB Schema rules!
         await AuditLog.create({
             action: 'LOAN_APPLICATION_SUBMITTED',
-            payload: req.body,
-            response: newLoan
+            request_payload: req.body,
+            response_payload: newLoan
         });
 
         return res.status(201).json(newLoan);
