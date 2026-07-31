@@ -39,7 +39,7 @@ router.post('/:loanId/evaluate', decisionLimiter, evaluateLoanAsync);
  * description: The loan application ID
  * responses:
  * 200:
- * description: Returns current status (Processing, Approved, or Rejected) along with score and reasons
+ * description: Returns current status along with score and reasons
  * 404:
  * description: Loan or decision record not found
  */
