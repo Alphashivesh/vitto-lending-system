@@ -3,7 +3,7 @@
 **🌐 Live Production Deployments:**
 * 🖥️ **Frontend Application (Netlify):** [`https://vitto-lending-system-by-shivesh.netlify.app`](https://vitto-lending-system-by-shivesh.netlify.app)
 * ⚙️ **Backend API Service (Render):** [`https://vitto-lending-system-81ee.onrender.com`](https://vitto-lending-system-81ee.onrender.com)
-* 📑 **Backend API Service using Swagger docs(Render):** [`https://vitto-lending-system-81ee.onrender.com/api-docs`](https://vitto-lending-system-81ee.onrender.com/api-docs)
+* 📑 **Backend Docs (Swagger):** [`https://vitto-lending-system-81ee.onrender.com/api-docs`](https://vitto-lending-system-81ee.onrender.com/api-docs)
 
 A full-stack, lightweight lending decision engine designed to simulate how digital lenders process MSME applications and generate credit decisions. This system emphasizes clean architecture, real-world edge-case handling, and defensible product logic.
 
