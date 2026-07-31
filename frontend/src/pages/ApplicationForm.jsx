@@ -53,15 +53,17 @@ const ApplicationForm = () => {
                 business_type: formData.business_type,
                 monthly_revenue: Number(formData.monthly_revenue)
             };
+            
             // 1. Submit Business
             const businessRes = await submitBusinessProfile(businessPayload);
-            
-            // 🔥 BULLETPROOF ID EXTRACTION 🔥
-            const businessId = businessRes?.data?.id || businessRes?.id;
-            
-            if (!businessId) {
-                throw new Error("Database saved the profile, but frontend couldn't read the ID!");
+
+            // 🔥 THE FIX: Stop everything if the backend rejected the request (e.g., duplicate PAN)
+            if (!businessRes || !businessRes.data) {
+                throw new Error("Business profile could not be created. Is this PAN already in use?");
             }
+
+            // Safely extract business ID
+            const businessId = businessRes.data.id || businessRes.data.business_id || businessRes.data.business?.id;
 
             const loanPayload = {
                 business_id: businessId,
@@ -72,22 +74,22 @@ const ApplicationForm = () => {
 
             // 2. Submit Loan
             const loanRes = await submitLoanApplication(loanPayload);
-            
-            // 🔥 BULLETPROOF ID EXTRACTION 🔥
-            const loanId = loanRes?.data?.id || loanRes?.id;
 
-            if (!loanId) {
-                throw new Error("Database saved the loan, but frontend couldn't read the ID!");
+            // 🔥 THE FIX: Stop everything if the loan request failed
+            if (!loanRes || !loanRes.data) {
+                throw new Error("Loan application could not be saved.");
             }
 
+            const loanId = loanRes.data.id || loanRes.data.loan_id || loanRes.data.loan?.id;
+            
             // 3. Trigger the background evaluation
-            setStatus('evaluating');
-            await evaluateLoan(loanId); 
-
+            setStatus('evaluating'); 
+            await evaluateLoan(loanId);
+            
             // 4. Poll the backend until the job finishes
             const finalDecision = await pollStatus(loanId);
-
-            // 3. Update the UI with the final result
+            
+            // 5. Update the UI with the final result
             setDecision({
                 status: finalDecision.decision_status,
                 credit_score: finalDecision.credit_score,
@@ -98,7 +100,8 @@ const ApplicationForm = () => {
         } catch (error) {
             console.error('Submission Error:', error);
             setStatus('error');
-            setErrorMessage(error.response?.data?.error || 'An unexpected network error occurred.');
+            // Safely display the error message on the screen so the user knows what happened
+            setErrorMessage(error.message || error.response?.data?.error || 'An unexpected network error occurred.');
         }
     };
 
