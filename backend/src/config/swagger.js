@@ -11,7 +11,7 @@ const options = {
             description: 'API documentation for the MSME Lending Decision Engine, featuring async polling, Joi validation, and rate limiting.',
         },
         servers: [{
-                url: 'https://vitto-lending-backend.onrender.com',
+                url: 'https://vitto-lending-system-81ee.onrender.com',
                 description: 'Live Render Production Server',
             },
             {
