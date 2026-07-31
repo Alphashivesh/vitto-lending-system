@@ -57,13 +57,13 @@ const ApplicationForm = () => {
             // 1. Submit Business
             const businessRes = await submitBusinessProfile(businessPayload);
 
-            // 🔥 THE FIX: Stop everything if the backend rejected the request (e.g., duplicate PAN)
-            if (!businessRes || !businessRes.data) {
-                throw new Error("Business profile could not be created. Is this PAN already in use?");
-            }
+            // 🔥 SMARTER EXTRACTION: Safely grab the ID, regardless of how Axios formats the response
+            const businessId = businessRes?.data?.id || businessRes?.id;
 
-            // Safely extract business ID
-            const businessId = businessRes.data.id || businessRes.data.business_id || businessRes.data.business?.id;
+            if (!businessId) {
+                // If there's no ID, the database blocked it (likely a duplicate PAN)
+                throw new Error("Business profile could not be created. This PAN might already be in use.");
+            }
 
             const loanPayload = {
                 business_id: businessId,
@@ -74,13 +74,13 @@ const ApplicationForm = () => {
 
             // 2. Submit Loan
             const loanRes = await submitLoanApplication(loanPayload);
+            
+            // 🔥 SMARTER EXTRACTION for loan ID
+            const loanId = loanRes?.data?.id || loanRes?.id;
 
-            // 🔥 THE FIX: Stop everything if the loan request failed
-            if (!loanRes || !loanRes.data) {
+            if (!loanId) {
                 throw new Error("Loan application could not be saved.");
             }
-
-            const loanId = loanRes.data.id || loanRes.data.loan_id || loanRes.data.loan?.id;
             
             // 3. Trigger the background evaluation
             setStatus('evaluating'); 
@@ -100,8 +100,7 @@ const ApplicationForm = () => {
         } catch (error) {
             console.error('Submission Error:', error);
             setStatus('error');
-            // Safely display the error message on the screen so the user knows what happened
-            setErrorMessage(error.message || error.response?.data?.error || 'An unexpected network error occurred.');
+            setErrorMessage(error.response?.data?.error || error.message || 'An unexpected network error occurred.');
         }
     };
 
