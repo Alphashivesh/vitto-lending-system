@@ -2,10 +2,7 @@ const Joi = require('joi');
 
 const businessSchema = Joi.object({
     owner_name: Joi.string().min(2).max(100).required(),
-    pan: Joi.string().length(10).alphanum().required().messages({
-        'string.length': 'PAN must be exactly 10 characters long.',
-        'string.alphanum': 'PAN must only contain letters and numbers.'
-    }),
+    pan: Joi.string().length(10).alphanum().required(),
     business_type: Joi.string().valid('Retail', 'Manufacturing', 'Services').required(),
     monthly_revenue: Joi.number().min(0).required()
 });

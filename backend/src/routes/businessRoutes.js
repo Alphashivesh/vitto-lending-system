@@ -8,7 +8,7 @@ const { businessSchema } = require('../middlewares/validationSchemas');
  * @swagger
  * /api/business/profile:
  * post:
- *- summary: Create a new business profile
+ * summary: Create a new business profile
  * tags: [Business]
  * requestBody:
  * required: true
