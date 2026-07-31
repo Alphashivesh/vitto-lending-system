@@ -58,7 +58,7 @@ npm run dev
 The credit engine utilizes a custom scoring model starting with a base score of 900. If the final score drops below 650, the loan is rejected.
 
 **Risk Multipliers & Deductions:**
-* **EMI Burden:** Calculates estimated EMI (ignoring interest). If the monthly EMI exceeds 40% of the monthly revenue, deduct 150 points (`HIGH_EMI_BURDEN`).
+* **EMI Burden:** Calculates estimated EMI (ignoring interest). If the monthly EMI exceeds 50% of the monthly revenue, deduct 150 points (`HIGH_EMI_BURDEN`).
 * **Loan Multiple:** Asking for more than 12x monthly revenue is highly risky. Deduct 100 points (`LOAN_TOO_LARGE`).
 * **Tenure Risk:** Tenures under 6 months or over 60 months carry unique default risks. Deduct 50 points (`RISKY_TENURE`).
 
