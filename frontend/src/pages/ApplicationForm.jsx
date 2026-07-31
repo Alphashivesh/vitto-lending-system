@@ -70,10 +70,10 @@ const ApplicationForm = () => {
 
             // 1. Trigger the background evaluation
             setStatus('evaluating');
-            await evaluateLoan(loanId); // <--- Using your new, safe variable!
+            await evaluateLoan(loanId); 
 
             // 2. Poll the backend until the job finishes
-            const finalDecision = await pollStatus(loanId); // <--- Using your new, safe variable!
+            const finalDecision = await pollStatus(loanId);
 
             // 3. Update the UI with the final result
             setDecision({
