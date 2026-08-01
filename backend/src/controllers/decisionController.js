@@ -29,7 +29,7 @@ const evaluateLoanAsync = async(req, res) => {
             try {
                 const { requested_amount, tenure_months, monthly_revenue } = applicationData;
 
-                let score = 500; // Starting Base Score
+                let score = 600; // Starting Base Score
                 let reasons = [];
 
                 // Calculate estimated Monthly EMI (Assuming roughly 1.5% monthly interest)
